@@ -1,0 +1,78 @@
+/* Efecto vidrio empañado con campana fija */
+:root {
+  --campana: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%22-60%20-20%20520%20700%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cfilter%20id%3D%22b%22%20x%3D%22-30%25%22%20y%3D%22-30%25%22%20width%3D%22160%25%22%20height%3D%22160%25%22%3E%3CfeGaussianBlur%20stdDeviation%3D%2214%22%2F%3E%3C%2Ffilter%3E%3C%2Fdefs%3E%3Cg%20filter%3D%22url%28%23b%29%22%3E%3Cpath%20fill%3D%22%23000%22%20d%3D%22M200%2040%20C270%2040%20292%20130%20305%20230%20C322%20340%20396%20390%20396%20450%20C396%20520%20330%20565%20290%20585%20C260%20600%20240%20610%20200%20610%20C160%20610%20140%20600%20110%20585%20C70%20565%204%20520%204%20450%20C4%20390%2078%20340%2095%20230%20C108%20130%20130%2040%20200%2040%20Z%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+  --campana-borde: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%22-60%20-20%20520%20700%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cfilter%20id%3D%22b%22%20x%3D%22-30%25%22%20y%3D%22-30%25%22%20width%3D%22160%25%22%20height%3D%22160%25%22%3E%3CfeGaussianBlur%20stdDeviation%3D%2212%22%2F%3E%3C%2Ffilter%3E%3C%2Fdefs%3E%3Cg%20filter%3D%22url%28%23b%29%22%3E%3Cpath%20fill%3D%22none%22%20stroke%3D%22%234a4f4d%22%20stroke-opacity%3D%22.45%22%20stroke-width%3D%2216%22%20d%3D%22M200%2040%20C270%2040%20292%20130%20305%20230%20C322%20340%20396%20390%20396%20450%20C396%20520%20330%20565%20290%20585%20C260%20600%20240%20610%20200%20610%20C160%20610%20140%20600%20110%20585%20C70%20565%204%20520%204%20450%20C4%20390%2078%20340%2095%20230%20C108%20130%20130%2040%20200%2040%20Z%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+  --campana-w: 125%;
+  --campana-h: 92%;
+  --campana-pos: 50% 96%;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; background: #cfd5d2; }
+
+.hero {
+  position: relative; width: 100%; height: 100vh; height: 100svh; overflow: hidden;
+  /* Fondo de prueba: se ve mientras no pongas tus videos (el video lo tapa) */
+  background:
+    repeating-linear-gradient(45deg, rgba(255,255,255,.35) 0 6px, transparent 6px 18px),
+    radial-gradient(circle at 25% 30%, #f29bb0 0 18%, transparent 19%),
+    radial-gradient(circle at 75% 55%, #f7c6a8 0 22%, transparent 23%),
+    radial-gradient(circle at 40% 80%, #9ec9bd 0 20%, transparent 21%),
+    linear-gradient(160deg, #f4dfe5, #b9cfc8);
+}
+
+.hero video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+/* Vidrio: desenfoca y aclara TODO menos la forma de campana */
+.vidrio {
+  position: absolute; inset: 0;
+  background: rgba(214, 219, 217, .66);
+  -webkit-backdrop-filter: blur(18px) saturate(.45) brightness(1.1);
+  backdrop-filter: blur(18px) saturate(.45) brightness(1.1);
+  -webkit-mask-image: linear-gradient(#000, #000), var(--campana);
+  mask-image: linear-gradient(#000, #000), var(--campana);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  -webkit-mask-position: 0 0, var(--campana-pos); mask-position: 0 0, var(--campana-pos);
+  -webkit-mask-size: 100% 100%, var(--campana-w) var(--campana-h);
+  mask-size: 100% 100%, var(--campana-w) var(--campana-h);
+}
+
+/* Sombra gris suave en el contorno de la campana */
+.borde {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image: var(--campana-borde); background-repeat: no-repeat;
+  background-position: var(--campana-pos); background-size: var(--campana-w) var(--campana-h);
+}
+
+@media (min-width: 768px) {
+  :root { --campana-w: 54%; --campana-h: 100%; }
+}
+
+/* ---------- Letras y cabecera ---------- */
+.aviso {
+  position: absolute; top: 0; left: 0; right: 0; z-index: 3;
+  background: #f1e1e6; color: #2b2b2b; text-align: center;
+  padding: 14px 12px; font-family: "Jost", "Segoe UI", sans-serif; font-size: 1rem;
+}
+.cabecera {
+  position: absolute; top: 50px; left: 0; right: 0; z-index: 3;
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 14px 18px;
+}
+.grupo { display: flex; gap: 12px; align-items: center; }
+.grupo:last-child { justify-content: flex-end; }
+.logo {
+  font-family: "Marcellus", Georgia, serif; font-size: clamp(1.8rem, 6vw, 2.6rem);
+  color: #fff; text-decoration: none; letter-spacing: .04em; text-shadow: 0 1px 10px rgba(0,0,0,.2);
+}
+.icono { background: none; border: 0; cursor: pointer; width: 40px; height: 40px; display: grid; place-items: center; }
+.icono svg { width: 32px; height: 32px; fill: none; stroke: #fde9eb; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 1px 3px rgba(60, 40, 45, .6)); }
+
+.hero-texto {
+  position: absolute; left: 0; right: 0; bottom: 20%; z-index: 3; text-align: center; color: #fff;
+  padding: 0 20px; text-shadow: 0 2px 18px rgba(0, 0, 0, .3);
+}
+.hero-texto h1 { font-family: "Marcellus", Georgia, serif; font-weight: 400; font-size: clamp(2.1rem, 7.5vw, 3.6rem); }
+.hero-texto p { font-family: "Cormorant Garamond", Georgia, serif; font-style: italic; font-weight: 500; font-size: clamp(1.3rem, 4.5vw, 2rem); margin-top: 8px; }
+
+@media (min-width: 768px) { .hero-texto { bottom: 12%; } }
